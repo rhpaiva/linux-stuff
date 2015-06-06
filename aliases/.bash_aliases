@@ -95,13 +95,16 @@ function sitemod () {
 }
 
 function newkey () {
-	if [ -z "$1" -o -z "$2" ]; then
+	local email="$1"
+	local keyname="$2"
+
+	if [ -z "$email" -o -z "$keyname" ]; then
        		echo "Please provide your email and name of the key - usage: newkey <email> <keyname>"
         	return 1
 	fi
 								 
- 	ssh-keygen -t rsa -b 4096 -C "$1" -f "$HOME/.ssh/${2}_rsa"
-	#ssh-add $HOME/.ssh/id_rsa.pub
+ 	ssh-keygen -t rsa -b 4096 -C "$email" -f "$HOME/.ssh/${keyname}_rsa"
+	ssh-add "$HOME/.ssh/${keyname}_rsa.pub"
 }
  
 function mykey () {
