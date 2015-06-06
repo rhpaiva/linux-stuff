@@ -12,7 +12,7 @@ Scripts and aliases to make the life of a linux user (ubuntu/mint) a bit easier.
 - `chmod u+x scripts/setup-new-machine.sh` and then `./scripts/setup-new-machine.sh`
 
 Usage: 
-`setup-new-machine.sh <installation-name>`, where <installation-name> 
+`setup-new-machine.sh <installation-name>`, where `<installation-name>` 
 comes from the name of the function you want to execute. Example:
 
 `setup-new-machine initial` will execute the installation of initial packages defined in `function install_initial()`.
