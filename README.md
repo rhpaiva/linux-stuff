@@ -15,4 +15,4 @@ Usage:
 `setup-new-machine.sh <installation-name>`, where <installation-name> 
 comes from the name of the function you want to execute. Example:
 
-`setup-new-machine init` will execute the installation of basic packages defined in `function install_initial()`.
+`setup-new-machine initial` will execute the installation of initial packages defined in `function install_initial()`.
