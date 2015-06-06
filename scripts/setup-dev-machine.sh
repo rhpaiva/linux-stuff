@@ -23,7 +23,7 @@ fi
 # Basic packages and setup
 # =================================================================
 
-function function_init() {
+function install_initial() {
 	# cause aptitude rules!
 	sudo apt-get install aptitude 
 	sudo aptitude -y update
