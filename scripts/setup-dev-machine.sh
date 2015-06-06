@@ -38,39 +38,22 @@ function install_initial() {
 	#sudo aptitude install mysql-server-5.6
 
 	# other tools
-	sudo aptitude -y install git \ 
-				curl \ 
-				htop \ 
-				colordiff \ 
-				terminator \ 
-				vim \ 
-				whois \ 
-				tree \ 
-				jq \
-				mytop
+	sudo aptitude -y install git curl htop colordiff terminator vim \
+				             whois tree jq mytop byobu
 
 	# nginx
 	#sudo aptitude -y install nginx
 
 	# PHP 5 and extensions
-	#sudo aptitude -y install php5-fpm \ 
-	#			php5-gd \ 
-	#			php5-curl \ 
-	#			php5-json \ 
-	#			php5-mcrypt \ 
-	#			php5-memcached \ 
-	#			php5-mysql \ 
-	#			php5-xdebug \ 
-	#			php5-intl \ 
-	#			php5-pgsql
-
-	exit $?
-
+	#sudo aptitude -y install php5-fpm php5-gd php5-curl php5-json \
+	#			              php5-mcrypt php5-memcached php5-mysql \
+	#			              php5-xdebug php5-intl php5-pgsql
 }
 
 # =================================================================
 # vpn
 # =================================================================
+
 function install_vpn () {
 	sudo aptitude -y install openvpn bridge-utils \
 				 network-manager-openvpn \

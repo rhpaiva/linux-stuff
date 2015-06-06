@@ -94,6 +94,7 @@ function sitemod () {
 	sudo vim $siteName 
 }
 
+# Generate new rsa key. Usage: newkey <email> <keyname>
 function newkey () {
 	local email="$1"
 	local keyname="$2"
@@ -106,7 +107,8 @@ function newkey () {
  	ssh-keygen -t rsa -b 4096 -C "$email" -f "$HOME/.ssh/${keyname}_rsa"
 	ssh-add "$HOME/.ssh/${keyname}_rsa.pub"
 }
- 
+
+# show available rsa keys. Usage: mykey [<keyname> ("id" is default")]
 function mykey () {
 	local keyname="$1"
 
