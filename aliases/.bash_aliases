@@ -7,6 +7,7 @@ hosts="/etc/hosts"
 # shortcuts for bash edition
 alias bashreload='source ~/.bashrc'
 alias bashedit='vim ~/.bashrc'
+alias aliases="vim ~/.bash_aliases"
  
 # raise the history size
 export HISTFILESIZE=20000
@@ -27,7 +28,7 @@ alias pfind="ps aux | grep $1"
 alias hfind="history | grep $1"
  
 # create symbolic link from $1 to $2
-alias slink="ln -s $1 $2"
+alias sln="ln -s $1 $2"
  
 # make user aliases available with sudo
 alias sudo='sudo '
@@ -94,6 +95,8 @@ function sitemod () {
 	sudo vim $siteName 
 }
 
+# === keys handling === #
+
 # Generate new rsa key. Usage: newkey <email> <keyname>
 function newkey () {
 	local email="$1"
@@ -119,3 +122,6 @@ function mykey () {
 	echo "Public key from file $HOME/.ssh/${keyname}_rsa.pub" && echo ""
 	cat "$HOME/.ssh/${keyname}_rsa.pub" #2>/dev/null;
 }
+
+# === docker === #
+alias docker="sudo docker "
