@@ -127,6 +127,11 @@ function mykey () {
 
 alias docker="sudo docker "
 
+# list all containers created
 alias docpsa="docker ps -a "
+
+# remove all created containers
 alias docrma="docker rm $(docker ps -a -q)"
+
+# stop all created containers
 alias docstopa="docker stop $(docker ps -a -q)"
