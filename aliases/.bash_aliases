@@ -124,4 +124,9 @@ function mykey () {
 }
 
 # === docker === #
+
 alias docker="sudo docker "
+
+alias docpsa="docker ps -a "
+alias docrma="docker rm $(docker ps -a -q)"
+alias docstopa="docker stop $(docker ps -a -q)"
