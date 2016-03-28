@@ -50,7 +50,10 @@ alias diskspace="du -S | sort -n -r | more"
  
 # Show me the size (sorted) of only the folders in this directory
 alias folders="find . -maxdepth 1 -type d -print | xargs du -sk | sort -rn"
- 
+
+# Delete with confirmation all the files in a directory $1
+alias delfiles="find . -type f -maxdepth 1 -exec rm -iv {} \;"
+
 # Color for manpages in less makes manpages a little easier to read
 export LESS_TERMCAP_mb=$'\E[01;31m'
 export LESS_TERMCAP_md=$'\E[01;31m'
@@ -128,10 +131,16 @@ function mykey () {
 alias docker="sudo docker "
 
 # list all containers created
-alias docpsa="docker ps -a "
+alias docps="docker ps -a "
+
+# only ids of containers
+alias docids="docker ps -a -q"
+
+# go into a container
+alias docgo="docker exec -it $1 /bin/bash"
 
 # remove all created containers
-alias docrma="docker rm $(docker ps -a -q)"
+#alias docrma="docker rm $(docker ps -a -q)"
 
 # stop all created containers
-alias docstopa="docker stop $(docker ps -a -q)"
+#alias docstopa="docker stop $(docker ps -a -q)"
