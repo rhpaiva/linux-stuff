@@ -135,21 +135,28 @@ function install_mariadb() {
 # =================================================================
 
 function install_docker() {
-	# add the key from docker's repo to apt-key to verify packages
-	sudo sh -c "wget -qO- https://get.docker.io/gpg | apt-key add -"
+    # Update package information, ensure that APT works with the https method, 
+    # and that CA certificates are installed.
+    sudo aptitude update
+    sudo aptitude install apt-transport-https ca-certificates
+    
+    # Add the new GPG key
+    sudo aptitutde adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 
 	# add the repo to apt's sources
-	sudo sh -c "echo deb http://get.docker.io/ubuntu docker main > /etc/apt/sources.list.d/docker.list"
+	sudo sh -c "echo deb https://apt.dockerproject.org/repo ubuntu-trusty main > /etc/apt/sources.list.d/docker.list"
+	
+	sudo aptitude update
 
 	# install docker and a syntax for vim
-	sudo aptitude -y install lxc-docker vim-syntax-docker
+	sudo aptitude -y install docker-engine vim-syntax-docker
 
 	# install docker-compose
-	sudo sh -c 'curl -L https://github.com/docker/compose/releases/download/1.2.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose'
+	sudo sh -c 'curl -L https://github.com/docker/compose/releases/download/1.6.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose'
 	sudo chmod +x /usr/local/bin/docker-compose
 
 	# install command completion for compose
-	sudo sh -c 'curl -L https://raw.githubusercontent.com/docker/compose/1.2.0/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose'
+	sudo sh -c 'curl -L https://raw.githubusercontent.com/docker/compose/1.6.2/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose'
 }
 
 # =================================================================
@@ -158,7 +165,7 @@ function install_docker() {
 function install_dockerimgs () {
 	sudo docker pull ubuntu:trusty
 	sudo docker pull nginx:latest
-	sudo docker pull php:5.6-fpm
+	sudo docker pull php:7-fpm
 	sudo docker pull mariadb:10
 	sudo docker pull memcached:latest
 	sudo docker pull mongo:latest
