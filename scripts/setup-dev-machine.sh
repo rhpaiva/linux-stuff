@@ -10,6 +10,8 @@ chrome_file='google-chrome-stable_current_amd64.deb'
 skype_file='skype-ubuntu-precise_4.3.0.37-1_i386.deb'
 phpstorm_file='PhpStorm-8.0.3.tar.gz'
 phpstorm_dir='/opt/jetbrains'
+docker_version='1.6.2'
+docker_machine_version='0.7.0'
 
 echo ">>> Download dir is: ${downloads_dir}"
 
@@ -152,11 +154,40 @@ function install_docker() {
 	sudo aptitude -y install docker-engine vim-syntax-docker
 
 	# install docker-compose
-	sudo sh -c 'curl -L https://github.com/docker/compose/releases/download/1.6.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose'
+	sudo sh -c "curl -L https://github.com/docker/compose/releases/download/${docker_version}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose"
 	sudo chmod +x /usr/local/bin/docker-compose
 
 	# install command completion for compose
-	sudo sh -c 'curl -L https://raw.githubusercontent.com/docker/compose/1.6.2/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose'
+	sudo sh -c "curl -L https://raw.githubusercontent.com/docker/compose/${docker_version}/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose"
+
+    # install docker-machine on demand
+	read -p 'Install docker machine too? [y/n]' choice
+
+	case $choice in
+		[Yy]) 
+			install_docker_machine; break;;
+		*)
+			exit;;
+	esac
+
+    # Adds user to group docker to avoid sudo
+	echo ">>> Adding current user to group docker"
+    sudo groupadd docker &>2 /dev/null
+	sudo usermod -a -G docker $USER
+	newgrp docker
+	sudo service docker restart
+}
+
+function install_docker_machine() {
+	local version='0.7.0'
+	local installerUrl="https://github.com/docker/machine/releases/download/v${version}/docker-machine-`uname -s`-`uname -m`"
+
+    sudo sh -c "curl -L ${installerUrl} > /usr/local/bin/docker-machine && chmod +x /usr/local/bin/docker-machine"
+
+	# code completions
+	local completionUrl='https://raw.githubusercontent.com/docker/machine/master/contrib/completion/bash'
+	
+	sudo sh -c "curl -L ${completionUrl}/docker-machine-prompt.bash > /etc/bash_completion.d/docker-machine"
 }
 
 # =================================================================

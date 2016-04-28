@@ -16,7 +16,7 @@ export HISTSIZE=10000
 PROMPT_COMMAND='history -a'
  
 # do we have internet?
-alias caiu='ping 8.8.8.8'
+alias isdown='ping 8.8.8.8'
  
 # list the directories grouping the directories at the top of the list
 alias lld='ll --group-directories-first'
@@ -32,10 +32,7 @@ alias sln="ln -s $1 $2"
  
 # make user aliases available with sudo
 alias sudo='sudo '
- 
-# run selenium using java
-alias runselenium="java -jar /usr/bin/selenium"
- 
+
 # make diff always use colordiff instead
 alias diff="colordiff "
  
@@ -123,24 +120,30 @@ function mykey () {
 	fi
 
 	echo "Public key from file $HOME/.ssh/${keyname}_rsa.pub" && echo ""
-	cat "$HOME/.ssh/${keyname}_rsa.pub" #2>/dev/null;
+	cat "$HOME/.ssh/${keyname}_rsa.pub" #2>/dev/null
 }
 
 # === docker === #
 
-alias docker="sudo docker "
-
 # list all containers created
-alias docps="docker ps -a "
+alias docps="docker ps --all "
 
 # only ids of containers
-alias docids="docker ps -a -q"
+alias docids="docker ps --all --quiet"
 
 # go into a container
-alias docgo="docker exec -it $1 /bin/bash"
+alias docgo="docker exec --interactive --tty $1 /bin/bash"
 
 # remove all created containers
-#alias docrma="docker rm $(docker ps -a -q)"
+alias docrma="docker rm $(docids)"
 
 # stop all created containers
-#alias docstopa="docker stop $(docker ps -a -q)"
+alias docstopa="docker stop $(docids)"
+
+# run php7 in a container
+alias php7="docker run -i --rm -v ${PWD}:${PWD} -v /tmp/:/tmp/ -w ${PWD} --net=host --sig-proxy=true --pid=host rhpaiva/php:7-fpm php $@"
+alias php7-xdebug="docker run -i --rm -v ${PWD}:${PWD} -v /tmp/:/tmp/ -w ${PWD} --net=host --sig-proxy=true --pid=host rhpaiva/php-xdebug:7-fpm php $@"
+
+# === composer running in a docker container === #
+alias composer="docker run -i --rm -v ${PWD}:${PWD} -v /tmp/:/tmp/ -w ${PWD} -e 'TERM=xterm-256color' rhpaiva/php-composer:7-fpm php composer.phar $@"
+
