@@ -17,9 +17,12 @@ PROMPT_COMMAND='history -a'
  
 # do we have internet?
 alias isdown='ping 8.8.8.8'
+
+# move unity bar to the specified position
+alias mvbar="gsettings set com.canonical.Unity.Launcher launcher-position $1"
  
 # list the directories grouping the directories at the top of the list
-alias lld='ll --group-directories-first'
+alias lld='ll -h --group-directories-first'
  
 # find process by name
 alias pfind="ps aux | grep $1"
@@ -139,6 +142,9 @@ alias docrma="docker rm $(docids)"
 
 # stop all created containers
 alias docstopa="docker stop $(docids)"
+
+# because docker-compose is too much to type
+alias docompose="docker-compose $@"
 
 # run php7 in a container
 alias php7="docker run -i --rm -v ${PWD}:${PWD} -v /tmp/:/tmp/ -w ${PWD} --net=host --sig-proxy=true --pid=host rhpaiva/php:7-fpm php $@"
