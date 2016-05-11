@@ -54,3 +54,4 @@ ssh root@${server_ip} \
 check_last_command;
 
 echo -e "\n>>> Server '${server_ip}' configured for user '${server_user}' successfully!"
+echo -e ">>> 'ssh -p 666 ${server_ip}' to go into your server."
