@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# TODO:
+# Firewall, fail2ban
+# https://easyengine.io/tutorials/nginx/fail2ban/
+
 # === includes ===
 source includes/functions.sh
 

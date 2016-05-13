@@ -151,5 +151,5 @@ alias php7="docker run -i --rm -v ${PWD}:${PWD} -v /tmp/:/tmp/ -w ${PWD} --net=h
 alias php7-xdebug="docker run -i --rm -v ${PWD}:${PWD} -v /tmp/:/tmp/ -w ${PWD} --net=host --sig-proxy=true --pid=host rhpaiva/php-xdebug:7-fpm php $@"
 
 # === composer running in a docker container === #
-alias composer="docker run -i --rm -v ${PWD}:${PWD} -v /tmp/:/tmp/ -w ${PWD} -e 'TERM=xterm-256color' rhpaiva/php-composer:7-fpm php composer.phar $@"
+alias composer="docker run -ti --rm -v ${PWD}:${PWD} -v /tmp/:/tmp/ -w ${PWD} -e 'TERM=xterm' rhpaiva/php-composer:7-fpm php composer.phar -vvv $@"
 
