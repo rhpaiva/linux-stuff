@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 
 # TODO:
-# Firewall, fail2ban
+# Docker (engine and compose)
 # https://easyengine.io/tutorials/nginx/fail2ban/
 
 # === includes ===
 source includes/functions.sh
-
-# === variables ===
-ssh_key=$(cat "${HOME}/.ssh/id_rsa.pub")
 
 cat << BANNER
 
@@ -26,34 +23,31 @@ fi
 read -p "Server IP: " server_ip
 
 if [[ -z ${server_ip} ]]; then
-    echo -e ">>> No Server IP provided. Aborting...\n"
+    echo -e "\n>>> No Server IP provided. Aborting...\n"
     exit 1
+fi
+
+# === Gather server info ===
+read -p "Is this server a public web server (Nginx, for example)? [y/n]: " is_web_server
+if [[ "${is_web_server}" == "y" ]]  ||  [[ "${is_web_server}" == "Y" ]]; then
+    is_web_server=true
+else
+    is_web_server=false
 fi
 
 echo -e "\n>>> Initiating configuration for server '${server_ip}'\n"
 
-ssh root@${server_ip} \
-    "
-    locale-gen en_US en_US.UTF-8 de_DE de_DE.UTF-8 \
-    && echo -e 'LANG=\"en_US.UTF-8\"\nLANGUAGE=\"en_US:en\"\n' > /etc/default/locale \
-    && echo '' \
-    && echo '>>> Generating new user '${server_user}' in server...' \
-    && adduser --disabled-password --gecos '' ${server_user} \
-    && usermod --append --groups sudo ${server_user} \
-    && echo '' \
-    && echo '>>> Copying your public key to server...' \
-    && mkdir --parents /home/${server_user}/.ssh \
-    && echo '${ssh_key}' >> /home/${server_user}/.ssh/authorized_keys \
-    && echo '' \
-    && echo '>>> Tweaking SSH config to make it safer...' \
-    && sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config \
-    && sed -i 's/PubkeyAuthentication no/PubkeyAuthentication yes/g' /etc/ssh/sshd_config \
-    && sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config \
-    && sed -i 's/ClientAliveInterval 120/ClientAliveInterval 300/g' /etc/ssh/sshd_config \
-    && sed -i 's/LoginGraceTime 120/LoginGraceTime 30/g' /etc/ssh/sshd_config \
-    && sed -i 's/Port 22/Port 666/g' /etc/ssh/sshd_config \
-    && systemctl reload sshd
-    "
+ssh_key=$(cat "${HOME}/.ssh/id_rsa.pub")
+commands_file="$(cat vps-commands/commands.sh)"
+
+# set of env variables to be passed into the ssh execution
+injected_variables="
+    is_web_server=${is_web_server};
+    server_user='${server_user}';
+    ssh_key='${ssh_key}';
+"
+
+ssh root@${server_ip} "${injected_variables} true && ${commands_file}"
 
 check_last_command;
 
