@@ -12,7 +12,6 @@ locale-gen en_US en_US.UTF-8 de_DE de_DE.UTF-8 \
 apt-get update \
 && apt-get --assume-yes install \
     ntp \
-    fail2ban \
     htop \
     curl
 
