@@ -2,16 +2,22 @@ function config_web_server() {
     ufw allow 80/tcp
 }
 
+echo -e "\n>>> Initiating configuration for server '${server_ip}'\n"
+
 # === Locale generation ===
 locale-gen en_US en_US.UTF-8 de_DE de_DE.UTF-8 \
 && echo -e 'LANG="en_US.UTF-8"\nLANGUAGE="en_US:en"\n' > /etc/default/locale
 
 # === APT Stuff ===
 apt-get update \
-&& apt-get --assume-yes install ntp fail2ban \
+&& apt-get --assume-yes install \
+    ntp \
+    fail2ban \
+    htop \
+    curl
 
 # === User creation ===
-echo -e "\n>>> Generating new user '${server_user}' in server..." \
+echo -e "\n>>> Generating new user '${server_user}' in server...\n" \
 && adduser --gecos '' ${server_user} \
 && usermod --append --groups sudo ${server_user}
 
@@ -31,7 +37,7 @@ echo -e '\n>>> Tweaking SSH config to make it safer...' \
 && systemctl reload sshd
 
 # === Firewall Config ===
-echo -e '\n>>> Configuring the firewall...' \
+echo -e '\n>>> Configuring the firewall...\n' \
 && sed -i 's/IPV6=no/IPV6=yes/g' /etc/default/ufw \
 && ufw allow 666/tcp
 

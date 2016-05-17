@@ -6,3 +6,15 @@ function check_last_command() {
         exit 1
     fi
 }
+
+function confirm() {
+    local question="$1"
+
+    read -p "${question}" last_answer
+
+    if [[ "${last_answer}" == "y" ]]  ||  [[ "${last_answer}" == "Y" ]]; then
+        last_answer=true
+    else
+        last_answer=false
+    fi
+}
