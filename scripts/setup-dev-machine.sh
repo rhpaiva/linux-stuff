@@ -10,7 +10,7 @@ chrome_file='google-chrome-stable_current_amd64.deb'
 skype_file='skype-ubuntu-precise_4.3.0.37-1_i386.deb'
 phpstorm_file='PhpStorm-8.0.3.tar.gz'
 phpstorm_dir='/opt/jetbrains'
-docker_version='1.6.2'
+docker_compose_version='1.7.1'
 docker_machine_version='0.7.0'
 
 echo ">>> Download dir is: ${downloads_dir}"
@@ -72,7 +72,7 @@ function install_vpn () {
 # download and install chrome
 function install_chrome () {
 	if [ ! -f "${downloads_dir}/${chrome_file}" ]; then
-		wget --directory-prefix="${downloads_dir}" \ 
+		wget --directory-prefix="${downloads_dir}" \
 			"https://dl.google.com/linux/direct/${chrome_file}"
 	fi
 
@@ -143,22 +143,22 @@ function install_docker() {
     sudo aptitude install apt-transport-https ca-certificates
     
     # Add the new GPG key
-    sudo aptitutde adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+    sudo aptitude adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 
 	# add the repo to apt's sources
-	sudo sh -c "echo deb https://apt.dockerproject.org/repo ubuntu-trusty main > /etc/apt/sources.list.d/docker.list"
+	sudo sh -c "echo deb https://apt.dockerproject.org/repo ubuntu-xenial main > /etc/apt/sources.list.d/docker.list"
 	
 	sudo aptitude update
 
 	# install docker and a syntax for vim
-	sudo aptitude -y install docker-engine vim-syntax-docker
+	sudo aptitude --assume-yes install docker-engine vim-syntax-docker
 
 	# install docker-compose
-	sudo sh -c "curl -L https://github.com/docker/compose/releases/download/${docker_version}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose"
+	sudo sh -c "curl -L https://github.com/docker/compose/releases/download/${docker_compose_version}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose"
 	sudo chmod +x /usr/local/bin/docker-compose
 
 	# install command completion for compose
-	sudo sh -c "curl -L https://raw.githubusercontent.com/docker/compose/${docker_version}/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose"
+	sudo sh -c "curl -L https://raw.githubusercontent.com/docker/compose/${docker_compose_version}/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose"
 
     # install docker-machine on demand
 	read -p 'Install docker machine too? [y/n]' choice
