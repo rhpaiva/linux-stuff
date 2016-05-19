@@ -5,6 +5,8 @@ function check_last_command() {
         echo -e "\n>>> Last command failed. Aborting..."
         exit 1
     fi
+
+    exit 0
 }
 
 function confirm() {

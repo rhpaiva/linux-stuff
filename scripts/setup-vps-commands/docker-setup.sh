@@ -1,14 +1,11 @@
-KERNEL="$(uname -r)"
-ARCH="$(uname -s)-$(uname -m)"
-
 export TERM='xterm'
+
+KERNEL="$(uname -r)"
 
 echo -e "\n>>> Installing Docker Engine\n"
 
-# Update package information, ensure that APT works with the https method,
-# and that CA certificates are installed.
-apt-get update \
-&& apt-get install --assume-yes \
+# ensure that APT works with the https method and that CA certificates are installed.
+apt-get install --assume-yes \
     apt-transport-https \
     ca-certificates \
     linux-image-extra-${kernel}

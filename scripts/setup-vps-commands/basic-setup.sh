@@ -1,7 +1,3 @@
-function config_web_server() {
-    ufw allow 80/tcp
-}
-
 echo -e "\n>>> Initiating configuration for server '${server_ip}'\n"
 
 # === Locale generation ===
@@ -27,21 +23,26 @@ echo -e '\n>>> Copying your public key to server...' \
 
 # === SSH Config ===
 echo -e '\n>>> Tweaking SSH config to make it safer...' \
-&& sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config \
-&& sed -i 's/PubkeyAuthentication no/PubkeyAuthentication yes/g' /etc/ssh/sshd_config \
-&& sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config \
-&& sed -i 's/ClientAliveInterval 120/ClientAliveInterval 300/g' /etc/ssh/sshd_config \
-&& sed -i 's/LoginGraceTime 120/LoginGraceTime 30/g' /etc/ssh/sshd_config \
-&& sed -i 's/Port 22/Port 666/g' /etc/ssh/sshd_config \
+&& sed -i \
+    -e 's/#PasswordAuthentication yes/PasswordAuthentication no/g' \
+    -e 's/PubkeyAuthentication no/PubkeyAuthentication yes/g' \
+    -e 's/PermitRootLogin yes/PermitRootLogin no/g' \
+    -e 's/ClientAliveInterval 120/ClientAliveInterval 300/g' \
+    -e 's/LoginGraceTime 120/LoginGraceTime 30/g' \
+    -e 's/Port 22/Port 666/g' \
+    /etc/ssh/sshd_config \
 && systemctl reload sshd
 
 # === Firewall Config ===
+# Ports:
+# - 666 for ssh
+# - 80  for web server
 echo -e '\n>>> Configuring the firewall...\n' \
-&& sed -i 's/IPV6=no/IPV6=yes/g' /etc/default/ufw \
+&& sed --in-place 's/IPV6=no/IPV6=yes/g' /etc/default/ufw \
 && ufw allow 666/tcp
 
 if [[ "${is_web_server}" == true ]]; then
-    config_web_server;
+    ufw allow 80/tcp
 fi
 
 ufw disable \
