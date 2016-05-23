@@ -26,12 +26,10 @@ fi
 # =================================================================
 
 function install_initial() {
-	# cause aptitude rules!
-	sudo apt-get install aptitude 
-	sudo aptitude -y update
+	sudo apt-get --assume-yes update
 
 	# console package manager
-	sudo aptitude -y install gdebi
+	sudo apt-get --assume-yes install gdebi
 	
 	# postgresql
 	#sudo aptitude -y install postgresql postgresql-contrib pgadmin3
@@ -40,8 +38,8 @@ function install_initial() {
 	#sudo aptitude install mysql-server-5.6
 
 	# other tools
-	sudo aptitude -y install git curl htop colordiff terminator vim \
-				             whois tree jq mytop byobu
+	sudo apt-get --assume-yes install git curl htop colordiff terminator vim \
+				             whois tree jq nmap
 
 	# nginx
 	#sudo aptitude -y install nginx
