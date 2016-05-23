@@ -1,6 +1,6 @@
-export TERM='xterm'
+test $? -gt 0 && exit 1
 
-KERNEL="$(uname -r)"
+kernel="$(uname -r)"
 
 echo -e "\n>>> Installing Docker Engine\n"
 

@@ -2,11 +2,9 @@
 
 function check_last_command() {
     if [[ "$?" > 0 ]]; then
-        echo -e "\n>>> Last command failed. Aborting..."
+        echo -e "\n'\e[38;5;196m>>> Last command failed. Aborting..."
         exit 1
     fi
-
-    exit 0
 }
 
 function confirm() {
