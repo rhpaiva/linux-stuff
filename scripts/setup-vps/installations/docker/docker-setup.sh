@@ -8,4 +8,4 @@ injected_variables="
     docker_compose_version='${docker_compose_version}';
 "
 
-ssh_commands="${ssh_commands}; $(cat ${PWD}/installations/docker/docker-commands.sh)"
+append_commands "docker"

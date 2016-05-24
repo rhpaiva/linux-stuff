@@ -1,8 +1,6 @@
-#!/usr/bin/env bash
-
 function check_last_command() {
     if [[ "$?" > 0 ]]; then
-        echo -e "\n'\e[38;5;196m>>> Last command failed. Aborting..."
+        echo -e "\n${fgcolor_fail}>>> Last command failed. Aborting...${color_reset}"
         exit 1
     fi
 }
@@ -17,4 +15,8 @@ function confirm() {
     else
         last_answer=false
     fi
+}
+
+function append_commands() {
+    ssh_commands="${ssh_commands}; $(cat ${PWD}/installations/$1/$1-commands.sh)"
 }

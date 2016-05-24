@@ -2,7 +2,7 @@ test $? -gt 0 && exit 1
 
 kernel="$(uname -r)"
 
-echo -e "\n>>> Installing Docker Engine\n"
+echo -e "\n${bgcolor_ok}>>> Installing Docker Engine${color_reset}\n"
 
 # ensure that APT works with the https method and that CA certificates are installed.
 apt-get install --assume-yes \
@@ -22,7 +22,7 @@ test $? -eq 0 \
 
 # install docker-compose and its command completion
 test $? -eq 0 \
-&& echo -e "\n>>> Installing Docker Compose as a container" \
+&& echo -e "\n${bgcolor_ok}>>> Installing Docker Compose as a container${color_reset}" \
 && curl -L https://github.com/docker/compose/releases/download/${docker_compose_version}/run.sh > /usr/local/bin/docker-compose \
 && chmod +x /usr/local/bin/docker-compose \
 && curl -L https://raw.githubusercontent.com/docker/compose/${docker_compose_version}/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose \
@@ -30,6 +30,6 @@ test $? -eq 0 \
 
 # Adds generated user to group docker to avoid sudo
 test $? -eq 0 \
-&& echo -e "\n>>> Adding user '${server_user}' to group docker" \
+&& echo -e "\n${bgcolor_ok}>>> Adding user '${server_user}' to group docker${color_reset}" \
 && usermod -a -G docker ${server_user} \
 && service docker restart

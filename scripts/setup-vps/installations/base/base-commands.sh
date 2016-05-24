@@ -2,7 +2,7 @@ test $? -gt 0 && exit 1
 
 export TERM='xterm'
 
-echo -e "\n>>> Initiating basic configuration for server '${server_ip}'\n"
+echo -e "\n${bgcolor_ok}>>> Initiating basic configuration for server '${server_ip}'${color_reset}\n"
 
 # === Locale generation ===
 locale-gen en_US en_US.UTF-8 de_DE de_DE.UTF-8 \
@@ -24,19 +24,19 @@ test $? -eq 0 \
 
 # === User creation ===
 test $? -eq 0 \
-&& echo -e "\n>>> Generating new user '${server_user}' in server...\n" \
+&& echo -e "\n${bgcolor_ok}>>> Generating new user '${server_user}' in server...${color_reset}\n" \
 && adduser --gecos '' ${server_user} \
 && usermod --append --groups sudo ${server_user}
 
 # === SSH Credentials ===
 test $? -eq 0 \
-&& echo -e '\n>>> Copying your public key to server...' \
+&& echo -e "\n${bgcolor_ok}>>> Copying your public key to server...${color_reset}" \
 && mkdir --parents /home/${server_user}/.ssh \
 && echo "${ssh_key}" >> /home/${server_user}/.ssh/authorized_keys
 
 # === SSH Config ===
 test $? -eq 0 \
-&& echo -e '\n>>> Tweaking SSH config to make it safer...' \
+&& echo -e "\n${bgcolor_ok}>>> Tweaking SSH config to make it safer...${color_reset}" \
 && sed -i \
     -e 's/#PasswordAuthentication yes/PasswordAuthentication no/g' \
     -e 's/PubkeyAuthentication no/PubkeyAuthentication yes/g' \
@@ -54,7 +54,7 @@ test $? -eq 0 \
 # - accept into loopback
 # - drops everything else by default (careful when flushing iptables because DROP is maintained)
 test $? -eq 0 \
-&& echo -e '\n>>> Configuring iptables rules...\n' \
+&& echo -e "\n${bgcolor_ok}>>> Configuring iptables rules...${color_reset}\n" \
 && iptables --policy INPUT ACCEPT \
 && iptables --policy OUTPUT ACCEPT \
 && iptables --flush \

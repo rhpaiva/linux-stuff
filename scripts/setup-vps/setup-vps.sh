@@ -9,8 +9,11 @@ setup_files="$@"
 # color codes
 color_fg=38
 color_bg=48
-color_fail=196
-color_ok=22
+color_reset="\e[0m"
+fgcolor_fail="\e[${color_fg};5;88m"
+fgcolor_ok="\e[${color_fg};5;18m"
+bgcolor_fail="\e[${color_bg};5;88m"
+bgcolor_ok="\e[${color_bg};5;18m"
 
 # === includes ===
 source ../includes/functions.sh
@@ -32,7 +35,7 @@ fi
 read -p "Server IP: " server_ip
 
 if [[ -z "${server_ip}" ]]; then
-    echo -e "\n>>> No Server IP provided. Aborting...\n"
+    echo -e "\n${bgcolor_fail}>>> No Server IP provided. Aborting...${color_reset}\n"
     exit 1
 fi
 
@@ -53,7 +56,7 @@ if [[ ! -z "${setup_files}" ]]; then
         file_path="${PWD}/installations/${setup_file}/${setup_file}-setup.sh"
 
         if [[ ! -f "${file_path}" ]]; then
-            echo -e "\nFile ${file_path} not found"
+            echo -e "\n${bgcolor_fail}File ${file_path} not found${color_reset}"
             exit 1
         fi
 
@@ -62,13 +65,16 @@ if [[ ! -z "${setup_files}" ]]; then
         source "${file_path}"
     done
 
-    echo -e "\n>>> Running additional installation for: ${additional}"
+    echo -e "\n${bgcolor_ok}>>> Running additional installation for: ${color_reset}${additional}"
 fi
 
 # set of env variables to be passed into the ssh execution
 injected_variables="
-    alias echo_ok='echo -e \"\e[${color_fg};5;${color_red}m$@\"'
-    alias echo_fail='echo -e \"\e[${color_fg};5;${color_blue}m$@\"'
+    color_reset='${color_reset}'
+    bgcolor_fail='${bgcolor_fail}'
+    fgcolor_fail='${fgcolor_fail}'
+    bgcolor_ok='${bgcolor_ok}'
+    fgcolor_ok='${fgcolor_ok}'
     ${injected_variables}
     server_ip='${server_ip}'
     server_user='${server_user}'
@@ -77,14 +83,14 @@ injected_variables="
 "
 
 #echo -e "${injected_variables} true && ${ssh_commands}"; exit 1;
-echo -e "\n>>> Executing commands in server '${server_ip}'...\n"
+echo -e "\n${bgcolor_ok}>>> Executing commands in server '${server_ip}'...${color_reset}\n";
 ssh "root@${server_ip}" "${injected_variables} true && ${ssh_commands}"
 
 check_last_command;
 
 # we don't have root access anymore
-echo -e "\n>>> Rebooting server '${server_ip}'...\n"
-ssh -p "${ssh_port}" "${server_ip}" "reboot now"
+#echo -e "\n${bgcolor_ok}>>> Rebooting server '${server_ip}'...${color_reset}\n"
+#ssh -p "${ssh_port}" "${server_ip}" "sudo reboot now"
 
-echo -e "\n>>> Server '${server_ip}' configured for user '${server_user}' successfully!"
-echo -e ">>> 'ssh -p ${ssh_port} ${server_ip}' to go into your server.\n"
+echo -e "\n${bgcolor_ok}>>> Server '${server_ip}' configured for user '${server_user}' successfully!"
+echo -e ">>> 'ssh -p ${ssh_port} ${server_ip}' to go into your server.${color_reset}\n"
