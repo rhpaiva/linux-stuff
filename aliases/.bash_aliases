@@ -146,10 +146,16 @@ alias docstopa="docker stop $(docids)"
 # because docker-compose is too much to type
 alias docompose="docker-compose $@"
 
+# updates all docker images
+alias docpull='for img in $(docker images --format "{{.Repository}}:{{.Tag}}"); do docker pull $img; done'
+
 # run php7 in a container
-alias php7="docker run -i --rm -v ${PWD}:${PWD} -v /tmp/:/tmp/ -w ${PWD} --net=host --sig-proxy=true --pid=host rhpaiva/php:7-fpm php $@"
-alias php7-xdebug="docker run -i --rm -v ${PWD}:${PWD} -v /tmp/:/tmp/ -w ${PWD} --net=host --sig-proxy=true --pid=host rhpaiva/php-xdebug:7-fpm php $@"
+alias php7="docker run -i --rm -v $(pwd):$(pwd) -v /tmp/:/tmp/ -w $(pwd) -e 'TERM=xterm' --net=host --sig-proxy=true --pid=host rhpaiva/php:7-fpm php $@"
+alias php7-xdebug="docker run -i --rm -v $(pwd):$(pwd) -v /tmp/:/tmp/ -w $(pwd) -e 'TERM=xterm' --net=host --sig-proxy=true --pid=host rhpaiva/php:7-xdebug php $@"
 
 # === composer running in a docker container === #
-alias composer="docker run -ti --rm -v ${PWD}:${PWD} -v /tmp/:/tmp/ -w ${PWD} -e 'TERM=xterm' rhpaiva/php:7-fpm php composer.phar $@"
+function composer() {
+	local current_dir=$(pwd)
+	docker run -ti --rm -v ${current_dir}:${current_dir} -v /tmp/:/tmp/ -w ${current_dir} -e 'TERM=xterm' rhpaiva/php:7-fpm php composer.phar $@
+}
 
