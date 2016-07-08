@@ -80,6 +80,7 @@ injected_variables="
     server_user='${server_user}'
     ssh_key='${ssh_key}'
     ssh_port='${ssh_port}'
+    timezone='Europe/Berlin'
 "
 
 #echo -e "${injected_variables} true && ${ssh_commands}"; exit 1;
@@ -87,10 +88,6 @@ echo -e "\n${bgcolor_ok}>>> Executing commands in server '${server_ip}'...${colo
 ssh "root@${server_ip}" "${injected_variables} true && ${ssh_commands}"
 
 check_last_command;
-
-# we don't have root access anymore
-#echo -e "\n${bgcolor_ok}>>> Rebooting server '${server_ip}'...${color_reset}\n"
-#ssh -p "${ssh_port}" "${server_ip}" "sudo reboot now"
 
 echo -e "\n${bgcolor_ok}>>> Server '${server_ip}' configured for user '${server_user}' successfully!"
 echo -e ">>> 'ssh -p ${ssh_port} ${server_ip}' to go into your server.${color_reset}\n"
