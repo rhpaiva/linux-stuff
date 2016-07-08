@@ -8,7 +8,7 @@ echo -e "\n${bgcolor_ok}>>> Initiating basic configuration for server '${server_
 locale-gen en_US en_US.UTF-8 de_DE de_DE.UTF-8 \
 && echo -e 'LANG="en_US.UTF-8"\nLANGUAGE="en_US:en"\n' > /etc/default/locale
 
-# adjust timezone to Europe/Berlin (this can be later a param for customization)
+# adjust timezone
 test $? -eq 0 \
 && mv /etc/localtime /etc/localtime.old \
 && ln -s /usr/share/zoneinfo/${timezone} /etc/localtime \
