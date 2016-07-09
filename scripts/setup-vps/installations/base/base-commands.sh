@@ -12,7 +12,7 @@ locale-gen en_US en_US.UTF-8 de_DE de_DE.UTF-8 \
 test $? -eq 0 \
 && mv /etc/localtime /etc/localtime.old \
 && ln -s /usr/share/zoneinfo/${timezone} /etc/localtime \
-&& echo -e "\n${bgcolor_ok}>>> Changed timezone to '${timezone}'${color_reset}"
+&& echo -e "\n${bgcolor_ok}>>> Changed timezone to '${timezone}'${color_reset}\n"
 
 # preconfigure iptables-persistent to not show the dialog
 test $? -eq 0 \
