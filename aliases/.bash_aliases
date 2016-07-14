@@ -156,6 +156,10 @@ alias php7-xdebug="docker run -i --rm -v $(pwd):$(pwd) -v /tmp/:/tmp/ -w $(pwd) 
 # === composer running in a docker container === #
 function composer() {
 	local current_dir=$(pwd)
-	docker run -ti --rm -v ${current_dir}:${current_dir} -v /tmp/:/tmp/ -w ${current_dir} -e 'TERM=xterm' rhpaiva/php:7-fpm php composer.phar $@
+	docker run -ti --rm -v ${current_dir}:${current_dir} -v /tmp/:/tmp/ -w ${current_dir} -e 'TERM=xterm' rhpaiva/php:7-tools composer $@
 }
 
+function deployer() {
+	local current_dir=$(pwd)
+	docker run -ti --rm -v ${current_dir}:${current_dir} -v /tmp/:/tmp/ -w ${current_dir} -e 'TERM=xterm' rhpaiva/php:7-tools dep $@
+}
