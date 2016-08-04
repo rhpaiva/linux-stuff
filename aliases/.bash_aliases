@@ -135,16 +135,21 @@ alias docps="docker ps --all "
 alias docids="docker ps --all --quiet"
 
 # go into a container
-alias docgo="docker exec --interactive --tty $1 /bin/bash"
+function docgo() {
+    docker exec --interactive --tty "$1" /bin/bash
+}
 
 # remove all created containers
-alias docrma="docker rm $(docids)"
+alias docrma="docids | xargs docker rm"
 
 # stop all created containers
-alias docstopa="docker stop $(docids)"
+alias docstopa="docids | xargs docker stop"
 
 # because docker-compose is too much to type
 alias docompose="docker-compose $@"
+
+# stop and remove all containers
+alias docnuke="docstopa && docrma"
 
 # updates all docker images
 alias docpull='for img in $(docker images --format "{{.Repository}}:{{.Tag}}"); do docker pull $img; done'
@@ -159,7 +164,24 @@ function composer() {
 	docker run -ti --rm -v ${current_dir}:${current_dir} -v /tmp/:/tmp/ -w ${current_dir} -e 'TERM=xterm' rhpaiva/php:7-tools composer $@
 }
 
-function deployer() {
-	local current_dir=$(pwd)
-	docker run -ti --rm -v ${current_dir}:${current_dir} -v /tmp/:/tmp/ -w ${current_dir} -e 'TERM=xterm' rhpaiva/php:7-tools dep $@
+# === aliases for Digital Ocean doctl ===
+
+function dodropmk() {
+	local name="$1"
+    local size="512mb"
+	local region="FRA1"
+	local image="ubuntu-16-04-x64"
+	local sshkey="$(ssh-add -l -E md5 | grep rhpaiva | cut -d ' ' -f 2 | cut -b 5-)"
+
+    echo "Creating: doctl compute droplet create "${name}" --image "${image}" --size "${size}" --region "${region}" --ssh-keys "${sshkey}" --wait --enable-private-networking"
+
+    doctl compute droplet create "${name}" --image "${image}" --size "${size}" --region "${region}" --ssh-keys "${sshkey}" --wait --enable-private-networking
+}
+
+function dodroprm() {
+	doctl compute droplet delete "$1"
+}
+
+function dodropls() {
+	doctl compute droplet list
 }
