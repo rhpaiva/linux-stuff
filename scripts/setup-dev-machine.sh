@@ -10,7 +10,7 @@ chrome_file='google-chrome-stable_current_amd64.deb'
 skype_file='skype-ubuntu-precise_4.3.0.37-1_i386.deb'
 phpstorm_file='PhpStorm-8.0.3.tar.gz'
 phpstorm_dir='/opt/jetbrains'
-docker_compose_version='1.7.1'
+docker_compose_version='1.8.0'
 docker_machine_version='0.7.0'
 
 echo ">>> Download dir is: ${downloads_dir}"
@@ -81,7 +81,7 @@ function install_chrome () {
 function install_skype () {
     if [ ! -f "${downloads_dir}/${skype_file}" ]; then
 		wget --directory-prefix="${downloads_dir}" \ 
-			"http://download.skype.com/linux/${skype_file}"
+			"https://download.skype.com/${skype_file}"
 	fi
 
 	sudo gdebi "${downloads_dir}/${skype_file}"
@@ -137,23 +137,24 @@ function install_mariadb() {
 function install_docker() {
     # Update package information, ensure that APT works with the https method, 
     # and that CA certificates are installed.
-    sudo aptitude update
-    sudo aptitude install apt-transport-https ca-certificates
+    sudo apt update
+    sudo apt install apt-transport-https ca-certificates
     
     # Add the new GPG key
-    sudo aptitude adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+    sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 
 	# add the repo to apt's sources
 	sudo sh -c "echo deb https://apt.dockerproject.org/repo ubuntu-xenial main > /etc/apt/sources.list.d/docker.list"
 	
-	sudo aptitude update
+	sudo apt update
 
 	# install docker and a syntax for vim
-	sudo aptitude --assume-yes install docker-engine vim-syntax-docker
+	sudo apt --assume-yes install docker-engine vim-syntax-docker linux-image-extra-$(uname -r)
 
 	# install docker-compose
-	sudo sh -c "curl -L https://github.com/docker/compose/releases/download/${docker_compose_version}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose"
+	sudo sh -c "curl -L https://github.com/docker/compose/releases/download/${docker_compose_version}/run.sh > /usr/local/bin/docker-compose"
 	sudo chmod +x /usr/local/bin/docker-compose
+	docker-compose --version
 
 	# install command completion for compose
 	sudo sh -c "curl -L https://raw.githubusercontent.com/docker/compose/${docker_compose_version}/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose"
@@ -163,16 +164,17 @@ function install_docker() {
 
 	case $choice in
 		[Yy]) 
-			install_docker_machine; break;;
+			install_docker_machine;
+			break;;
 		*)
 			exit;;
 	esac
 
-    # Adds user to group docker to avoid sudo
+    	# Adds user to group docker to avoid sudo
 	echo ">>> Adding current user to group docker"
-    sudo groupadd docker &>2 /dev/null
-	sudo usermod -a -G docker $USER
-	newgrp docker
+    	#sudo groupadd docker &>2 /dev/null
+	sudo usermod --append --groups docker $USER
+	
 	sudo service docker restart
 }
 
