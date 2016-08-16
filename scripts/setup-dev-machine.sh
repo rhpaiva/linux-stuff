@@ -32,20 +32,20 @@ function install_initial() {
 	sudo apt-get --assume-yes install gdebi
 	
 	# postgresql
-	#sudo aptitude -y install postgresql postgresql-contrib pgadmin3
+	#sudo apt -y install postgresql postgresql-contrib pgadmin3
 	
 	# mysql
-	#sudo aptitude install mysql-server-5.6
+	#sudo apt install mysql-server-5.6
 
 	# other tools
 	sudo apt-get --assume-yes install git curl htop colordiff terminator vim \
 				             whois tree jq nmap
 
 	# nginx
-	#sudo aptitude -y install nginx
+	#sudo apt -y install nginx
 
 	# PHP 5 and extensions
-	#sudo aptitude -y install php5-fpm php5-gd php5-curl php5-json \
+	#sudo apt -y install php5-fpm php5-gd php5-curl php5-json \
 	#			              php5-mcrypt php5-memcached php5-mysql \
 	#			              php5-xdebug php5-intl php5-pgsql
 }
@@ -55,7 +55,7 @@ function install_initial() {
 # =================================================================
 
 function install_vpn () {
-	sudo aptitude -y install openvpn bridge-utils \
+	sudo apt -y install openvpn bridge-utils \
 				 network-manager-openvpn \
 				 network-manager-openvpn-gnome \
 				 network-manager-vpnc
@@ -87,7 +87,7 @@ function install_skype () {
 	sudo gdebi "${downloads_dir}/${skype_file}"
 	
 	# for skypes proper cursor and display skype on the system tray
-	sudo aptitude -y install libxcursor1:i386 sni-qt:i386
+	sudo apt -y install libxcursor1:i386 sni-qt:i386
 }
 
 # =================================================================
@@ -96,7 +96,7 @@ function install_skype () {
 
 function install_phpstorm() {
     # for phpstorm (we also need java)
-	sudo aptitude -y install default-jre default-jdk
+	sudo apt -y install default-jre default-jdk
 
         if [ ! -f "${downloads_dir}/${phpstorm_file}" ]; then
 		wget --directory-prefix="${downloads_dir}" \ 
@@ -209,21 +209,21 @@ function install_dockerimgs () {
 # =================================================================
 
 # for quick tests
-#sudo aptitude install php5-cli
+#sudo apt install php5-cli
 
 # memcache
-#sudo aptitude install memcached
+#sudo apt install memcached
 
 # PHP 5 with php-fpm
-#sudo aptitude install php5-fpm
+#sudo apt install php5-fpm
 # PHP 5 extensions
-#sudo aptitude install php5-gd php5-curl php5-json php5-mcrypt php5-memcached php5-mysql php5-xdebug php5-intl php5-pgsql
+#sudo apt install php5-gd php5-curl php5-json php5-mcrypt php5-memcached php5-mysql php5-xdebug php5-intl php5-pgsql
 
 # mysql and a query monitor
-#sudo aptitude install mysql-server mytop
+#sudo apt install mysql-server mytop
 
 # ruby and sass
-#sudo aptitude install ruby
+#sudo apt install ruby
 #sudo gem install sass
 
 
