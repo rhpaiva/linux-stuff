@@ -62,41 +62,6 @@ export LESS_TERMCAP_se=$'\E[0m'
 export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
- 
-# === SVN aliases === #
- 
-# show log with last $1 entries and show changed files
-alias svnlog="svn log -vl $1"
-alias svnlog_diff="svn log -vl $1 --diff"
- 
-# === NGINX aliases === #
- 
-# list sites-available
-alias sitels="lld /etc/nginx/sites-available"
- 
-# edit nginx sites-available/<sitename>
-function sitemod () {
-	if [ -z "$1" ]; then
-        	echo "Please specify the name of the site - usage: sitemod <sitename>"
-	        return 1
-	fi
-
-	local siteName="/etc/nginx/sites-available/${1}.conf"
- 
-	if [ ! -f $siteName ]; 
-	then
-		printf "%s does not exist. The ones available are:\n\n" $siteName
- 
-		for site in $(ls /etc/nginx/sites-available); do
-			printf "\t- %s\n" $site;
-		done
- 
-		echo ''
-		return 1
-	fi
- 
-	sudo vim $siteName 
-}
 
 # === keys handling === #
 
@@ -154,34 +119,64 @@ alias docnuke="docstopa && docrma"
 # updates all docker images
 alias docpull='for img in $(docker images --format "{{.Repository}}:{{.Tag}}"); do docker pull $img; done'
 
-# run php7 in a container
-alias php7="docker run -i --rm -v $(pwd):$(pwd) -v /tmp/:/tmp/ -w $(pwd) -e 'TERM=xterm' --net=host --sig-proxy=true --pid=host rhpaiva/php:7-fpm php $@"
-alias php7-xdebug="docker run -i --rm -v $(pwd):$(pwd) -v /tmp/:/tmp/ -w $(pwd) -e 'TERM=xterm' --net=host --sig-proxy=true --pid=host rhpaiva/php:7-xdebug php $@"
+# === MICROK8S ===
+alias mk8="microk8s $@"
+alias mk8ctl="microk8s kubectl $@"
 
-# === composer running in a docker container === #
-function composer() {
-	local current_dir=$(pwd)
-	docker run -ti --rm -v ${current_dir}:${current_dir} -v /tmp/:/tmp/ -w ${current_dir} -e 'TERM=xterm' rhpaiva/php:7-tools composer $@
+# === K8S stuff === #
+export K8CURNS=""
+
+alias kctl="kubectl $@"
+
+alias k8gns="kubectl get namespace $@"
+alias k8gpods="kubectl get pods $K8CURNS $@"
+alias k8logs="kubectl logs $K8CURNS $@"
+
+alias k8ctx="kubectl config current-context $@"
+alias k8usectx="kubectl config use-context $@"
+alias k8setctx="kubectl config set-context $@"
+
+alias k8clus="kubectl config get-clusters $@"
+alias k8setclus="kubectl config set-cluster $@"
+
+function k8exec() {
+    local pod="$1"
+    local cmd="$2"
+
+    kubectl exec -ti ${pod} -- ${cmd}
 }
 
-# === aliases for Digital Ocean doctl ===
+function k8ns() {
+    if [ -z "$1" ]; then
+        local curns="${K8CURNS}"
 
-function dodropmk() {
-	local name="$1"
-    local size="512mb"
-	local region="FRA1"
-	local image="ubuntu-16-04-x64"
-	local sshkey="$(ssh-add -l -E md5 | grep rhpaiva | cut -d ' ' -f 2 | cut -b 5-)"
+        if [ -z "${curns}" ]; then
+            local curns="not set"
+        fi
 
-    echo "Creating: doctl compute droplet create "${name}" --image "${image}" --size "${size}" --region "${region}" --ssh-keys "${sshkey}" --wait --enable-private-networking"
+        echo "Current namespace: ${curns}"
+        echo -e "Namespaces available:\n"
 
-    doctl compute droplet create "${name}" --image "${image}" --size "${size}" --region "${region}" --ssh-keys "${sshkey}" --wait --enable-private-networking
+        k8gns
+    else
+        export K8CURNS="-n $1"
+
+        echo "Current namespace set to: $1"
+    fi;
 }
 
-function dodroprm() {
-	doctl compute droplet delete "$1"
+# === Add the git branch to terminal ===
+force_color_prompt=yes
+color_prompt=yes
+
+parse_git_branch() {
+ git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
 }
 
-function dodropls() {
-	doctl compute droplet list
-}
+if [ "$color_prompt" = yes ]; then
+ PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;31m\] $(parse_git_branch)\[\033[00m\]\$ '
+else
+ PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(parse_git_branch)\$ '
+fi
+
+#unset color_prompt force_color_prompt
